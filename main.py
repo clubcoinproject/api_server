@@ -13,11 +13,11 @@ def getList():
     paramDict = {}
     paramDict.setdefault('quotes', 'KRW')
 
-    datas = requests.get(url, headers=headerDict, params=paramDict).json()
+    requests_data = requests.get(url, headers=headerDict, params=paramDict).json()
 
     result = []
 
-    for idx, data in enumerate(datas):
+    for idx, data in enumerate(requests_data):
         if idx < 30:
             rank = data["rank"]
             name = data["name"]
