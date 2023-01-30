@@ -1,7 +1,8 @@
 # api_server
 
 사용언어: Python  
-사용 프레임워크: fastapi
+사용 프레임워크: fastapi  
+list: 코인파프리카 api
 
 ## 설명서
 ### 리스트 api
