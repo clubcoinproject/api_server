@@ -3,14 +3,13 @@ import requests
 
 app = FastAPI()
 
-headerDict = {}
-headerDict.setdefault('X-CoinAPI-Key', '45098E05-4005-4912-9893-1446614726B6')
-
 
 @app.get("/list/")
 def getList():
     url = "https://api.coinpaprika.com/v1/tickers"
 
+    headerDict = {}
+    headerDict.setdefault('X-CoinAPI-Key', '45098E05-4005-4912-9893-1446614726B6')
     paramDict = {}
     paramDict.setdefault('quotes', 'KRW')
 
@@ -29,7 +28,6 @@ def getList():
 
             result.append({"rank": rank, "name": name, "symbol": symbol, "price": price,
                            "total_price": total_price, "change": change})
-
         else:
             break
 
