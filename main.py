@@ -1,34 +1,49 @@
+from typing import Optional
 from fastapi import FastAPI
+from pydantic import BaseModel
 import requests
 
 app = FastAPI()
 
 
-@app.get("/list/")
 def getList():
     url = "https://api.coinpaprika.com/v1/tickers"
 
-    headerDict = {}
-    headerDict.setdefault('X-CoinAPI-Key', '45098E05-4005-4912-9893-1446614726B6')
     paramDict = {}
     paramDict.setdefault('quotes', 'KRW')
 
-    requests_data = requests.get(url, headers=headerDict, params=paramDict).json()
+    requests_data = requests.get(url, params=paramDict)
 
-    result = []
+    jsonData = []
+    status_code = requests_data.status_code
 
-    for idx, data in enumerate(requests_data):
-        if idx < 30:
-            rank = data["rank"]
-            name = data["name"]
-            symbol = data["symbol"]
-            price = data["quotes"]["KRW"]["price"]
-            total_price = data["quotes"]["KRW"]["price"]
-            change = data["quotes"]["KRW"]["percent_change_24h"]
+    if status_code == 200:
+        for idx, data in enumerate(requests_data.json()):
+            if idx < 30:
+                rank = data["rank"]
+                name = data["name"]
+                symbol = data["symbol"]
+                price = data["quotes"]["KRW"]["price"]
+                total_price = data["quotes"]["KRW"]["price"]
+                change = data["quotes"]["KRW"]["percent_change_24h"]
 
-            result.append({"rank": rank, "name": name, "symbol": symbol, "price": price,
-                           "total_price": total_price, "change": change})
-        else:
-            break
+                body = {"rank": rank, "name": name, "symbol": symbol, "price": price,
+                        "total_price": total_price, "change": change}
 
-    return result
+                jsonData.append(body)
+            else:
+                break
+
+    else:
+        jsonData.append({})
+
+    final = {"state": status_code, "body": jsonData}
+
+    return final
+
+
+@app.get("/list/")
+def work():
+    data = getList()
+
+    return data
