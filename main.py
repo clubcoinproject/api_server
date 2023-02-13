@@ -1,7 +1,11 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 import requests
 
 app = FastAPI()
+
+origin = ["*"]
+app.add_middleware(CORSMiddleware, allow_origins=origin)
 
 
 def getList():
