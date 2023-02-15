@@ -25,9 +25,9 @@ def getList():
                 rank = data["rank"]
                 name = data["name"]
                 symbol = data["symbol"]
-                price = data["quotes"]["KRW"]["price"]
-                total_price = data["quotes"]["KRW"]["price"]
-                change = data["quotes"]["KRW"]["percent_change_24h"]
+                price = round(data["quotes"]["KRW"]["price"], 2)
+                total_price = round(data["quotes"]["KRW"]["price"], 2)
+                change = round(data["quotes"]["KRW"]["percent_change_24h"], 2)
 
                 body = {"rank": rank, "name": name, "symbol": symbol, "price": price,
                         "total_price": total_price, "change": change}
