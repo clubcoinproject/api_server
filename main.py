@@ -44,8 +44,47 @@ def getList():
     return final
 
 
+def getDetail(symbol):
+    url = "https://rest.coinapi.io/v1/exchangerate/" + symbol + "/KRW/history"
+
+    paramDict = {}
+    paramDict.setdefault('period_id', '1DAY')
+
+    headerDict = {}
+    headerDict.setdefault('X-CoinAPI-Key', '45098E05-4005-4912-9893-1446614726B6')
+
+    requests_data = requests.get(url, params=paramDict, headers=headerDict)
+
+    jsonData = []
+    status_code = requests_data.status_code
+
+    if status_code == 200:
+        for idx, data in enumerate(requests_data.json()):
+            if idx < 7:
+                date = data['time_period_start'][:10]
+                price = round(data['rate_close'], 2)
+
+                body = {"date": date, "price": price}
+
+                jsonData.append(body)
+            else:
+                break
+
+    else:
+        jsonData.append({})
+
+    final = {"state": status_code, "body": jsonData}
+
+    return final
+
+
 @app.get("/list/")
 def work():
     data = getList()
 
     return data
+
+
+@app.get("/detail")
+def detail(symbol):
+    return getDetail(symbol)
