@@ -60,7 +60,7 @@ def getDetail(symbol):
 
     if status_code == 200:
         for idx, data in enumerate(requests_data.json()):
-            if idx < 7:
+            if idx < 30:
                 date = data['time_period_start'][:10]
                 price = round(data['rate_close'], 2)
 
@@ -87,4 +87,6 @@ def work():
 
 @app.get("/detail")
 def detail(symbol):
-    return getDetail(symbol)
+    data = getDetail(symbol)
+
+    return data
