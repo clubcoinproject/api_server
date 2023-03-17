@@ -1,6 +1,8 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import requests
+from datetime import datetime
+from fastapi.encoders import jsonable_encoder
 
 app = FastAPI()
 
@@ -45,7 +47,7 @@ def getList():
 
 
 def getDetail(symbol):
-    url = "https://rest.coinapi.io/v1/exchangerate/" + symbol + "/KRW/history"
+    url = f"https://rest.coinapi.io/v1/exchangerate/{symbol}/KRW/history"
 
     paramDict = {}
     paramDict.setdefault('period_id', '1DAY')
@@ -78,6 +80,21 @@ def getDetail(symbol):
     return final
 
 
+def getForcasting(symbol):
+    url = f"https://rest.coinapi.io/v1/exchangerate/{symbol}/KRW/history"
+
+    time_end = datetime.today().strftime("%Y-%m-%d")
+    paramDict = {'period_id': '1DAY', 'time_start': '2015-01-01', 'time_end': time_end, 'limit': '2500'}
+
+    headerDict = {}
+    headerDict.setdefault('X-CoinAPI-Key', '45098E05-4005-4912-9893-1446614726B6')
+
+    requests_data = requests.get(url, params=paramDict, headers=headerDict).json()
+    jsonable_encoder(requests_data)
+
+    return jsonable_encoder(requests_data)
+
+
 @app.get("/list/")
 def work():
     data = getList()
@@ -90,3 +107,8 @@ def detail(symbol):
     data = getDetail(symbol)
 
     return data
+
+
+@app.get("/forcasting")
+def forcasting(symbol):
+    return getForcasting(symbol)
